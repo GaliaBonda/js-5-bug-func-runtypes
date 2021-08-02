@@ -34,21 +34,47 @@ function summ(a: BigObject): number {
 
 function isBigObject(obj: unknown): boolean {
   if (typeof obj !== 'object' || !obj) return false;
-  //const keys: string[] = Object.keys(obj);
-  const CValueObj: RuntypeBase<unknown> = Lazy(() =>
-    Record({
-      cvalue: Union(String, Number, Undefined, BigObject),
-    }),
-  );
+  let keys: string[] = Object.keys(obj);
+  // const CValueObj: RuntypeBase<unknown> = Lazy(() =>
+  //   Record({
+  //     cvalue: Union(String, Number, Undefined, BigObject),
+  //   }),
+  // );
+
+  const CValueObj: RuntypeBase<unknown> = Record({
+    cvalue: Union(
+      String,
+      Number,
+      Undefined,
+      Lazy(() => {
+        if (hasKey(obj, keys[0])) {
+          const newObj = obj[keys[0]];
+          const cvalue = 'cvalue';
+          if (hasKey(newObj, cvalue) && typeof newObj[cvalue] === 'object') {
+            keys = Object.keys(newObj[cvalue]);
+            console.log('we are here');
+          }
+        }
+
+        return BigObject;
+      }),
+    ),
+  });
+
   const BigObjValue = Union(Undefined, CValueObj);
   const a: { [l: string]: typeof BigObjValue } = {};
-  const keys: string[] = Object.keys(obj);
+  //const keys: string[] = Object.keys(obj);
   // if (!hasKey(obj, keys[0])) return false;
-  // const newObj = obj[keys[0]];
+  // let newObj = obj[keys[0]];
   // const cvalue = 'cvalue';
   // if (hasKey(newObj, cvalue) && typeof newObj[cvalue] === 'object') {
   //   keys = Object.keys(newObj[cvalue]);
   //   console.log('we are here');
+  // }
+  // newObj = newObj[keys[0]];
+  // if (hasKey(newObj, cvalue) && typeof newObj[cvalue] === 'object') {
+  //   keys = Object.keys(newObj[cvalue]);
+  //   console.log('we are here now');
   // }
   console.log('keys ', keys);
   for (let i = 0; i < keys.length; i++) {
@@ -64,9 +90,9 @@ function isBigObject(obj: unknown): boolean {
   }
 }
 
-// function hasKey<O>(obj: O, key: PropertyKey): key is keyof O {
-//   return key in obj;
-// }
+function hasKey<O>(obj: O, key: PropertyKey): key is keyof O {
+  return key in obj;
+}
 
 const example: BigObject = {
   hello: { cvalue: 1 },
@@ -83,7 +109,7 @@ const example1: BigObject = {
   again: {
     cvalue: {
       yak: {
-        cvalue: { good: { cvalue: 3 } },
+        cvalue: { yak: { cvalue: 3 } },
       },
     },
   },
@@ -97,7 +123,7 @@ const example2: BigObject = {
   again: {
     cvalue: {
       yay: {
-        cvalue: { good: { cvalue: 3 } },
+        cvalue: { yay: { cvalue: 3 } },
       },
     },
   },

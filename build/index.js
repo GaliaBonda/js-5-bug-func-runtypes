@@ -26,19 +26,39 @@ function summ(a) {
 function isBigObject(obj) {
     if (typeof obj !== 'object' || !obj)
         return false;
-    //const keys: string[] = Object.keys(obj);
-    const CValueObj = runtypes_1.Lazy(() => runtypes_1.Record({
-        cvalue: runtypes_1.Union(runtypes_1.String, runtypes_1.Number, runtypes_1.Undefined, BigObject),
-    }));
+    let keys = Object.keys(obj);
+    // const CValueObj: RuntypeBase<unknown> = Lazy(() =>
+    //   Record({
+    //     cvalue: Union(String, Number, Undefined, BigObject),
+    //   }),
+    // );
+    const CValueObj = runtypes_1.Record({
+        cvalue: runtypes_1.Union(runtypes_1.String, runtypes_1.Number, runtypes_1.Undefined, runtypes_1.Lazy(() => {
+            if (hasKey(obj, keys[0])) {
+                const newObj = obj[keys[0]];
+                const cvalue = 'cvalue';
+                if (hasKey(newObj, cvalue) && typeof newObj[cvalue] === 'object') {
+                    keys = Object.keys(newObj[cvalue]);
+                    console.log('we are here');
+                }
+            }
+            return BigObject;
+        })),
+    });
     const BigObjValue = runtypes_1.Union(runtypes_1.Undefined, CValueObj);
     const a = {};
-    const keys = Object.keys(obj);
+    //const keys: string[] = Object.keys(obj);
     // if (!hasKey(obj, keys[0])) return false;
-    // const newObj = obj[keys[0]];
+    // let newObj = obj[keys[0]];
     // const cvalue = 'cvalue';
     // if (hasKey(newObj, cvalue) && typeof newObj[cvalue] === 'object') {
     //   keys = Object.keys(newObj[cvalue]);
     //   console.log('we are here');
+    // }
+    // newObj = newObj[keys[0]];
+    // if (hasKey(newObj, cvalue) && typeof newObj[cvalue] === 'object') {
+    //   keys = Object.keys(newObj[cvalue]);
+    //   console.log('we are here now');
     // }
     console.log('keys ', keys);
     for (let i = 0; i < keys.length; i++) {
@@ -71,7 +91,7 @@ const example1 = {
     again: {
         cvalue: {
             yak: {
-                cvalue: { good: { cvalue: 3 } },
+                cvalue: { yak: { cvalue: 3 } },
             },
         },
     },
@@ -84,7 +104,7 @@ const example2 = {
     again: {
         cvalue: {
             yay: {
-                cvalue: { good: { cvalue: 3 } },
+                cvalue: { yay: { cvalue: 3 } },
             },
         },
     },
