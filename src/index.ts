@@ -56,7 +56,7 @@ function isBigObject(obj: unknown): boolean {
           }
         }
 
-        return BigObject;
+        return Union(Undefined, CValueObj);
       }),
     ),
   });

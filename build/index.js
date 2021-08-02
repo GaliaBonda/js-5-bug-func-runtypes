@@ -42,7 +42,7 @@ function isBigObject(obj) {
                     console.log('we are here');
                 }
             }
-            return BigObject;
+            return runtypes_1.Union(runtypes_1.Undefined, CValueObj);
         })),
     });
     const BigObjValue = runtypes_1.Union(runtypes_1.Undefined, CValueObj);
