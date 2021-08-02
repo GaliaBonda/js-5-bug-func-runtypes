@@ -27,11 +27,6 @@ function isBigObject(obj) {
     if (typeof obj !== 'object' || !obj)
         return false;
     let keys = Object.keys(obj);
-    // const CValueObj: RuntypeBase<unknown> = Lazy(() =>
-    //   Record({
-    //     cvalue: Union(String, Number, Undefined, BigObject),
-    //   }),
-    // );
     const CValueObj = runtypes_1.Record({
         cvalue: runtypes_1.Union(runtypes_1.String, runtypes_1.Number, runtypes_1.Undefined, runtypes_1.Lazy(() => {
             if (hasKey(obj, keys[0])) {
@@ -39,7 +34,6 @@ function isBigObject(obj) {
                 const cvalue = 'cvalue';
                 if (hasKey(newObj, cvalue) && typeof newObj[cvalue] === 'object') {
                     keys = Object.keys(newObj[cvalue]);
-                    console.log('we are here');
                 }
             }
             return runtypes_1.Union(runtypes_1.Undefined, CValueObj);
@@ -47,20 +41,6 @@ function isBigObject(obj) {
     });
     const BigObjValue = runtypes_1.Union(runtypes_1.Undefined, CValueObj);
     const a = {};
-    //const keys: string[] = Object.keys(obj);
-    // if (!hasKey(obj, keys[0])) return false;
-    // let newObj = obj[keys[0]];
-    // const cvalue = 'cvalue';
-    // if (hasKey(newObj, cvalue) && typeof newObj[cvalue] === 'object') {
-    //   keys = Object.keys(newObj[cvalue]);
-    //   console.log('we are here');
-    // }
-    // newObj = newObj[keys[0]];
-    // if (hasKey(newObj, cvalue) && typeof newObj[cvalue] === 'object') {
-    //   keys = Object.keys(newObj[cvalue]);
-    //   console.log('we are here now');
-    // }
-    console.log('keys ', keys);
     for (let i = 0; i < keys.length; i++) {
         a[keys[i]] = BigObjValue;
     }
