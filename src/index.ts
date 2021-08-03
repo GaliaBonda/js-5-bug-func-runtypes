@@ -20,10 +20,12 @@ function summ(a: BigObject): number {
     if (typeof elem.cvalue === 'string') {
       return +elem.cvalue || 2021;
     }
-    if (isBigObject(elem.cvalue)) {
-      return summ(elem.cvalue);
-    }
-    return elem.cvalue ?? 2021;
+    // if (isBigObject(elem.cvalue)) {
+    //   return summ(elem.cvalue);
+    // }
+    if (typeof elem.cvalue === 'number' || typeof elem.cvalue === 'undefined')
+      return elem.cvalue ?? 2021;
+    return summ(elem.cvalue);
   });
   let sum = 0;
   for (let i = 0; i < x.length; i++) {

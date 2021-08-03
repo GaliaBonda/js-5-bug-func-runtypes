@@ -12,10 +12,12 @@ function summ(a) {
         if (typeof elem.cvalue === 'string') {
             return +elem.cvalue || 2021;
         }
-        if (isBigObject(elem.cvalue)) {
-            return summ(elem.cvalue);
-        }
-        return (_a = elem.cvalue) !== null && _a !== void 0 ? _a : 2021;
+        // if (isBigObject(elem.cvalue)) {
+        //   return summ(elem.cvalue);
+        // }
+        if (typeof elem.cvalue === 'number' || typeof elem.cvalue === 'undefined')
+            return (_a = elem.cvalue) !== null && _a !== void 0 ? _a : 2021;
+        return summ(elem.cvalue);
     });
     let sum = 0;
     for (let i = 0; i < x.length; i++) {
