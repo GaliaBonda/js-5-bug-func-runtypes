@@ -21,18 +21,18 @@ function summ(a: BigObject): number {
       return +elem.cvalue || 2021;
     }
     if (isBigObject(elem.cvalue)) {
-      return summ(elem.cvalue as BigObject);
+      return summ(elem.cvalue);
     }
     return elem.cvalue ?? 2021;
   });
   let sum = 0;
   for (let i = 0; i < x.length; i++) {
-    sum += x[i] as number;
+    sum += x[i];
   }
   return sum;
 }
 
-function isBigObject(obj: unknown): boolean {
+function isBigObject(obj: unknown): obj is BigObject {
   if (typeof obj !== 'object' || !obj) return false;
   let keys: string[] = Object.keys(obj);
   const CValueObj: RuntypeBase<unknown> = Record({
